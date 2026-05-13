@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f7f2ea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mensajes AA">
+    <title>Mensajes apartamentos</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Apartamentos</p>
+          <h1>Mensajes reservas</h1>
+        </div>
+        <button class="icon-button" id="bookingButton" type="button" aria-label="Abrir Booking" title="Abrir Booking">
+          <span aria-hidden="true">↗</span>
+        </button>
+      </header>
+
+      <form class="composer" id="messageForm">
+        <label>
+          <span>Nombre</span>
+          <input id="guestName" name="guestName" type="text" autocomplete="name" placeholder="Nombre del huésped">
+        </label>
+
+        <label>
+          <span>Establecimiento</span>
+          <select id="establishment" name="establishment"></select>
+        </label>
+
+        <label>
+          <span>Apartamento</span>
+          <select id="apartment" name="apartment"></select>
+        </label>
+
+        <fieldset>
+          <legend>Sidra</legend>
+          <div class="segmented-control" role="group" aria-label="Sidra">
+            <label>
+              <input type="radio" name="cider" value="NO" checked>
+              <span>No</span>
+            </label>
+            <label>
+              <input type="radio" name="cider" value="SI">
+              <span>Si</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <button class="primary-button" type="submit">Generar mensaje</button>
+      </form>
+
+      <section class="message-panel" aria-label="Mensaje generado">
+        <div class="message-header">
+          <h2>Mensaje generado</h2>
+          <button class="secondary-button" id="copyButton" type="button">Copiar</button>
+        </div>
+        <textarea id="result" rows="12" spellcheck="true" placeholder="El mensaje aparecerá aquí"></textarea>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

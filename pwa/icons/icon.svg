@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mensajes apartamentos">
+  <rect width="512" height="512" rx="104" fill="#176b61"/>
+  <path fill="#fffaf4" d="M132 170c0-24 20-44 44-44h160c24 0 44 20 44 44v142c0 24-20 44-44 44H219l-72 48c-7 5-15 0-15-9v-39h-2c-24 0-44-20-44-44V170h46v142h31v36l44-36h129V170H132Z"/>
+  <path fill="#dcefeb" d="M176 188h160v34H176zM176 244h116v34H176z"/>
+</svg>
