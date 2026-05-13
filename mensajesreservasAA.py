@@ -8,14 +8,44 @@ ESTABLISHMENTS = {
         "wifi_password": "lobeira14",
         "booking_url": "https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/search_reservations.html?upcoming_reservations=1&source=nav&hotel_id=260913&lang=es",
         "message_sections": {
-            "welcome": (
-                "En el salón hay una carpeta de color marrón que contiene información, sugerencias y "
-                "recomendaciones de restaurantes y servicios en la zona."
-            ),
-            "closing": (
-                "Cualquier cosa que necesitéis, decídmelo. Mañana por la mañana andará por ahí mi "
-                "empleada Mary Carmen. Espero que paséis una buena estancia."
-            ),
+            "es": {
+                "welcome": (
+                    "En el salón hay una carpeta de color marrón que contiene información, sugerencias y "
+                    "recomendaciones de restaurantes y servicios en la zona."
+                ),
+                "cleaning": (
+                    "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, "
+                    "por si los necesitáis."
+                ),
+                "closing": (
+                    "Cualquier cosa que necesitéis, decídmelo. Mañana por la mañana andará por ahí mi "
+                    "empleada Mary Carmen. Espero que paséis una buena estancia."
+                ),
+                "cider": (
+                    "Os hemos dejado una sidra natural artesanal que elaboramos en nuestra aldea de la "
+                    "provincia de Lugo con nuestras propias manzanas. Tomadla fría, como si fuera un vino "
+                    "blanco, sin escanciar. Espero que os guste."
+                ),
+            },
+            "en": {
+                "welcome": (
+                    "In the living room, there is a brown folder with useful information, suggestions, "
+                    "and recommendations for restaurants and services in the area."
+                ),
+                "cleaning": (
+                    "There are cleaning supplies in a cupboard outside the apartment, next to the lift, "
+                    "in case you need them."
+                ),
+                "closing": (
+                    "If you need anything, just let me know. My employee Mary Carmen will be around "
+                    "tomorrow morning. I hope you have a lovely stay."
+                ),
+                "cider": (
+                    "We have left you a bottle of natural artisan cider, made in our village in the "
+                    "province of Lugo with apples from our own trees. Please drink it chilled, like a "
+                    "white wine, without pouring it from a height. I hope you enjoy it."
+                ),
+            },
         },
         "apartments": {
             "1A": {"code": "9856"},
@@ -26,18 +56,34 @@ ESTABLISHMENTS = {
             "3B": {"code": "7447"},
         },
         "apartment_notes": {
-            "1A": (
-                " También tenéis colchonetas para el mobiliario exterior dentro del apartamento en el "
-                "cuarto de la lavandería.\nEl toldo de la pérgola se acciona con un mando a distancia "
-                "que está en el salón. Tanto el toldo como los cojines rogamos se mantengan recogidos "
-                "después de su uso, especialmente el toldo por la noche por seguridad."
-            ),
-            "1B": (
-                " También tenéis colchonetas para el mobiliario exterior en un contenedor en la "
-                "terraza.\nEl toldo de la pérgola se acciona con un mando a distancia que está en el "
-                "salón. Tanto el toldo como los cojines rogamos se mantengan recogidos después de su uso, "
-                "especialmente el toldo por la noche por seguridad."
-            ),
+            "es": {
+                "1A": (
+                    " También tenéis colchonetas para el mobiliario exterior dentro del apartamento en el "
+                    "cuarto de la lavandería.\nEl toldo de la pérgola se acciona con un mando a distancia "
+                    "que está en el salón. Tanto el toldo como los cojines rogamos se mantengan recogidos "
+                    "después de su uso, especialmente el toldo por la noche por seguridad."
+                ),
+                "1B": (
+                    " También tenéis colchonetas para el mobiliario exterior en un contenedor en la "
+                    "terraza.\nEl toldo de la pérgola se acciona con un mando a distancia que está en el "
+                    "salón. Tanto el toldo como los cojines rogamos se mantengan recogidos después de su uso, "
+                    "especialmente el toldo por la noche por seguridad."
+                ),
+            },
+            "en": {
+                "1A": (
+                    " You will also find cushions for the outdoor furniture inside the apartment, in the "
+                    "laundry room.\nThe pergola awning is operated with a remote control, which is in the "
+                    "living room. Please make sure both the awning and the cushions are put away after use, "
+                    "especially the awning at night, for safety."
+                ),
+                "1B": (
+                    " You will also find cushions for the outdoor furniture in a storage box on the "
+                    "terrace.\nThe pergola awning is operated with a remote control, which is in the "
+                    "living room. Please make sure both the awning and the cushions are put away after use, "
+                    "especially the awning at night, for safety."
+                ),
+            },
         },
     },
     "Apartamentos Autor": {
@@ -45,14 +91,44 @@ ESTABLISHMENTS = {
         "wifi_password": "a123b456",
         "booking_url": "https://admin.booking.com/",
         "message_sections": {
-            "welcome": (
-                "En la mesa del salón tenéis una guía rápida con recomendaciones de playas, rutas y "
-                "servicios de la zona."
-            ),
-            "closing": (
-                "Si necesitáis cualquier ayuda durante la estancia, escribidme y os ayudo enseguida. "
-                "¡Disfrutad mucho de vuestras vacaciones!"
-            ),
+            "es": {
+                "welcome": (
+                    "En la mesa del salón tenéis una guía rápida con recomendaciones de playas, rutas y "
+                    "servicios de la zona."
+                ),
+                "cleaning": (
+                    "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, "
+                    "por si los necesitáis."
+                ),
+                "closing": (
+                    "Si necesitáis cualquier ayuda durante la estancia, escribidme y os ayudo enseguida. "
+                    "¡Disfrutad mucho de vuestras vacaciones!"
+                ),
+                "cider": (
+                    "Os hemos dejado una sidra natural artesanal que elaboramos en nuestra aldea de la "
+                    "provincia de Lugo con nuestras propias manzanas. Tomadla fría, como si fuera un vino "
+                    "blanco, sin escanciar. Espero que os guste."
+                ),
+            },
+            "en": {
+                "welcome": (
+                    "On the living room table, you will find a quick guide with recommendations for "
+                    "beaches, walking routes, and local services."
+                ),
+                "cleaning": (
+                    "There are cleaning supplies in a cupboard outside the apartment, next to the lift, "
+                    "in case you need them."
+                ),
+                "closing": (
+                    "If you need any help during your stay, just send me a message and I will help you "
+                    "right away. Enjoy your holiday!"
+                ),
+                "cider": (
+                    "We have left you a bottle of natural artisan cider, made in our village in the "
+                    "province of Lugo with apples from our own trees. Please drink it chilled, like a "
+                    "white wine, without pouring it from a height. I hope you enjoy it."
+                ),
+            },
         },
         "apartments": {
             "1": {"code": "3279"},
@@ -60,8 +136,7 @@ ESTABLISHMENTS = {
             "3": {"code": "7021"},
             "4": {"code": "5676"},
         },
-        "apartment_notes": {
-        },
+        "apartment_notes": {"es": {}, "en": {}},
     },
 }
 
@@ -90,6 +165,7 @@ def generate_message():
     establishment_name = establishment_var.get()
     ap = ap_var.get()
     special = sp_var.get()
+    language = language_var.get()
 
     if not name:
         # messagebox.showwarning("Error", "Introduce el nombre del huésped", parent=app)
@@ -105,26 +181,32 @@ def generate_message():
     password = apartments.get(ap, {}).get("code", "")
     wifi_name = establishment_data["wifi_name"]
     wifi_password = establishment_data["wifi_password"]
-    specific = establishment_data["apartment_notes"].get(ap, "")
-    welcome = establishment_data["message_sections"]["welcome"]
-    closing = establishment_data["message_sections"]["closing"]
+    language_code = "en" if language == "Inglés" else "es"
+    specific = establishment_data["apartment_notes"][language_code].get(ap, "")
+    sections = establishment_data["message_sections"][language_code]
 
-    message = (
-        f"Hola {name} tu apartamento en {establishment_name} es el {ap}. "
-        f"Entras con este código: {password}✅, que también abre el portal utilizando el teclado negro. "
-        f"La wifi es \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
-        f"{welcome}\n"
-        "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, "
-        f"por si los necesitáis.{specific}\n"
-        f"{closing}"
-    )
+    if language_code == "en":
+        message = (
+            f"Hello {name}, your apartment at {establishment_name} is {ap}. "
+            f"You can enter with this code: {password}✅. The same code also opens the main "
+            "entrance using the black keypad. "
+            f"The Wi-Fi network is \"{wifi_name}\" and the password is \"{wifi_password}\".\n"
+            f"{sections['welcome']}\n"
+            f"{sections['cleaning']}{specific}\n"
+            f"{sections['closing']}"
+        )
+    else:
+        message = (
+            f"Hola {name} tu apartamento en {establishment_name} es el {ap}. "
+            f"Entras con este código: {password}✅, que también abre el portal utilizando el teclado negro. "
+            f"La wifi es \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
+            f"{sections['welcome']}\n"
+            f"{sections['cleaning']}{specific}\n"
+            f"{sections['closing']}"
+        )
 
     if special == "SI":
-        message += (
-            "\nOs hemos dejado una sidra natural artesanal que elaboramos en nuestra aldea de la "
-            "provincia de Lugo con nuestras propias manzanas. Tomadla fría, como si fuera un vino "
-            "blanco, sin escanciar. Espero que os guste."
-        )
+        message += f"\n{sections['cider']}"
 
     result_text.delete("1.0", tk.END)
     result_text.insert(tk.END, message)
@@ -157,6 +239,12 @@ tk.Label(app, text="Apartamento:").pack(pady=6)
 ap_var = tk.StringVar(value="Selecciona apartamento")
 apartment_menu = tk.OptionMenu(app, ap_var, "Selecciona apartamento")
 apartment_menu.pack(pady=6)
+
+tk.Label(app, text="Idioma del mensaje:").pack(pady=6)
+language_var = tk.StringVar(value="Español")
+language_options = ["Español", "Inglés"]
+language_menu = tk.OptionMenu(app, language_var, *language_options)
+language_menu.pack(pady=5)
 
 tk.Label(app, text="Sidra:").pack(pady=6)
 sp_var = tk.StringVar(value="NO")
