@@ -3,7 +3,7 @@ from tkinter import messagebox
 import webbrowser
 
 ESTABLISHMENTS = {
-    "Apartamentos Basella": {
+    "Apartamentos Puerto Basella": {
         "wifi_name": "puertobasella",
         "wifi_password": "lobeira14",
         "booking_url": "https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/search_reservations.html?upcoming_reservations=1&source=nav&hotel_id=260913&lang=es",
@@ -40,9 +40,9 @@ ESTABLISHMENTS = {
             ),
         },
     },
-    "Apartamentos Mirador": {
-        "wifi_name": "miradorapartamentos",
-        "wifi_password": "mirador2026",
+    "Apartamentos Autor": {
+        "wifi_name": "puertobasella",
+        "wifi_password": "a123b456",
         "booking_url": "https://admin.booking.com/",
         "message_sections": {
             "welcome": (
@@ -55,14 +55,12 @@ ESTABLISHMENTS = {
             ),
         },
         "apartments": {
-            "A1": {"code": "1122"},
-            "A2": {"code": "3344"},
-            "B1": {"code": "5566"},
-            "B2": {"code": "7788"},
+            "1": {"code": "3279"},
+            "2": {"code": "3480"},
+            "3": {"code": "7021"},
+            "4": {"code": "5676"},
         },
         "apartment_notes": {
-            "A1": " El apartamento A1 incluye acceso directo al jardín común.",
-            "B2": " El apartamento B2 tiene plaza de garaje reservada nº8.",
         },
     },
 }
@@ -94,7 +92,7 @@ def generate_message():
     special = sp_var.get()
 
     if not name:
-        messagebox.showwarning("Error", "Introduce el nombre del huésped", parent=app)
+        # messagebox.showwarning("Error", "Introduce el nombre del huésped", parent=app)
         return
 
     if ap == "Selecciona apartamento":
