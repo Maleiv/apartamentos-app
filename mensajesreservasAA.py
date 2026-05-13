@@ -3,10 +3,20 @@ from tkinter import messagebox
 import webbrowser
 
 ESTABLISHMENTS = {
-    "Apartamentos Puerto Basella": {
+    "Apartamentos Basella": {
         "wifi_name": "puertobasella",
         "wifi_password": "lobeira14",
         "booking_url": "https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/search_reservations.html?upcoming_reservations=1&source=nav&hotel_id=260913&lang=es",
+        "message_sections": {
+            "welcome": (
+                "En el salón hay una carpeta de color marrón que contiene información, sugerencias y "
+                "recomendaciones de restaurantes y servicios en la zona."
+            ),
+            "closing": (
+                "Cualquier cosa que necesitéis, decídmelo. Mañana por la mañana andará por ahí mi "
+                "empleada Mary Carmen. Espero que paséis una buena estancia."
+            ),
+        },
         "apartments": {
             "1A": {"code": "9856"},
             "1B": {"code": "6248"},
@@ -30,18 +40,29 @@ ESTABLISHMENTS = {
             ),
         },
     },
-    "Apartamentos Autor": {
-        "wifi_name": "puertobasella",
-        "wifi_password": "a123b456",
+    "Apartamentos Mirador": {
+        "wifi_name": "miradorapartamentos",
+        "wifi_password": "mirador2026",
         "booking_url": "https://admin.booking.com/",
+        "message_sections": {
+            "welcome": (
+                "En la mesa del salón tenéis una guía rápida con recomendaciones de playas, rutas y "
+                "servicios de la zona."
+            ),
+            "closing": (
+                "Si necesitáis cualquier ayuda durante la estancia, escribidme y os ayudo enseguida. "
+                "¡Disfrutad mucho de vuestras vacaciones!"
+            ),
+        },
         "apartments": {
-            "1": {"code": "3279"},
-            "2": {"code": "3480"},
-            "3": {"code": "7021"},
-            "4": {"code": "5676"},
+            "A1": {"code": "1122"},
+            "A2": {"code": "3344"},
+            "B1": {"code": "5566"},
+            "B2": {"code": "7788"},
         },
         "apartment_notes": {
-            
+            "A1": " El apartamento A1 incluye acceso directo al jardín común.",
+            "B2": " El apartamento B2 tiene plaza de garaje reservada nº8.",
         },
     },
 }
@@ -72,6 +93,10 @@ def generate_message():
     ap = ap_var.get()
     special = sp_var.get()
 
+    if not name:
+        messagebox.showwarning("Error", "Introduce el nombre del huésped", parent=app)
+        return
+
     if ap == "Selecciona apartamento":
         messagebox.showwarning("Error", "Selecciona apartamento", parent=app)
         return
@@ -83,31 +108,18 @@ def generate_message():
     wifi_name = establishment_data["wifi_name"]
     wifi_password = establishment_data["wifi_password"]
     specific = establishment_data["apartment_notes"].get(ap, "")
+    welcome = establishment_data["message_sections"]["welcome"]
+    closing = establishment_data["message_sections"]["closing"]
 
-    message = ()
-
-    if establishment_name == "Apartamentos Autor":
-        message = (
-            f"Hola {name} tu apartamento en {establishment_name} está en la planta {ap}. "
-            f"Entras con este código: {password}✅, que también abre el portal. "
-            f"La wifi es cualquiera de las \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
-            "Hay utensilios de limpieza en un armario en la escalera, al lado del ascensor, "
-            f"por si los necesitáis.{specific}\n"
-            "Cualquier cosa que necesitéis, decídmelo. Espero que paséis una buena estancia."
-        )
-    
-    if establishment_name == "Apartamentos Puerto Basella":
-        message = (
-            f"Hola {name} tu apartamento en {establishment_name} es el {ap}. "
-            f"Entras con este código: {password}✅, que también abre el portal utilizando el teclado negro. "
-            f"La wifi es \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
-            "En el salón hay una carpeta de color marrón que contiene información, sugerencias y "
-            "recomendaciones de restaurantes y servicios en la zona.\n"
-            "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, "
-            f"por si los necesitáis.{specific}\n"
-            "Cualquier cosa que necesitéis, decídmelo. Mañana por la mañana andará por ahí mi "
-            "empleada Mary Carmen. Espero que paséis una buena estancia."
-        )
+    message = (
+        f"Hola {name} tu apartamento en {establishment_name} es el {ap}. "
+        f"Entras con este código: {password}✅, que también abre el portal utilizando el teclado negro. "
+        f"La wifi es \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
+        f"{welcome}\n"
+        "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, "
+        f"por si los necesitáis.{specific}\n"
+        f"{closing}"
+    )
 
     if special == "SI":
         message += (
