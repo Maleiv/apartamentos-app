@@ -77,7 +77,7 @@ const ESTABLISHMENTS = {
     },
     apartments: {
       "1": { code: "3279" },
-      "2": { code: "3480" },
+      "2": { code: "5972" },
       "3": { code: "7021" },
       "4": { code: "5676" },
     },
