@@ -51,9 +51,9 @@ ESTABLISHMENTS = {
             "1A": {"code": "9856"},
             "1B": {"code": "6248"},
             "2A": {"code": "6574"},
-            "2B": {"code": "2584"},
-            "3A": {"code": "2784"},
-            "3B": {"code": "7447"},
+            "2B": {"code": "8784"},
+            "3A": {"code": "5321"},
+            "3B": {"code": "9476"},
         },
         "apartment_notes": {
             "es": {
@@ -143,27 +143,58 @@ ESTABLISHMENTS = {
 
 app = tk.Tk()
 app.title("Auto mensajes apartamentos")
-app.geometry("860x640")
+app.geometry("860x700")
 
 
 def update_apartment_options(*_):
     selected_establishment = establishment_var.get()
     apartments = ESTABLISHMENTS[selected_establishment]["apartments"].keys()
 
-    apartment_menu["menu"].delete(0, "end")
-    for apartment in apartments:
-        apartment_menu["menu"].add_command(
-            label=apartment,
-            command=tk._setit(ap_var, apartment),
-        )
+    for widget in apartment_frame.winfo_children():
+        widget.destroy()
 
-    ap_var.set("Selecciona apartamento")
+    apartment_vars.clear()
+    for apartment in apartments:
+        apartment_vars[apartment] = tk.BooleanVar(value=False)
+        tk.Checkbutton(
+            apartment_frame,
+            text=apartment,
+            variable=apartment_vars[apartment],
+            width=8,
+            anchor="w",
+        ).pack(side="left", padx=6)
+
+
+def format_list(items, language_code):
+    if len(items) <= 1:
+        return items[0] if items else ""
+
+    conjunction = "and" if language_code == "en" else "y"
+    return f"{', '.join(items[:-1])} {conjunction} {items[-1]}"
+
+
+def format_code_lines(selected_apartments, apartments, language_code):
+    lines = []
+
+    for ap in selected_apartments:
+        password = apartments.get(ap, {}).get("code", "")
+
+        if language_code == "en":
+            lines.append(f"You can enter apartment {ap} with this code: {password}✅.")
+        else:
+            lines.append(f"Puedes entrar al apartamento {ap} con este código: {password}✅.")
+
+    return "\n".join(lines)
+
+
+def format_apartment_notes(selected_apartments, notes):
+    return "\n".join(notes.get(ap, "") for ap in selected_apartments if notes.get(ap, ""))
 
 
 def generate_message():
     name = name_entry.get().strip()
     establishment_name = establishment_var.get()
-    ap = ap_var.get()
+    selected_apartments = [ap for ap, var in apartment_vars.items() if var.get()]
     special = sp_var.get()
     language = language_var.get()
 
@@ -171,34 +202,56 @@ def generate_message():
         # messagebox.showwarning("Error", "Introduce el nombre del huésped", parent=app)
         return
 
-    if ap == "Selecciona apartamento":
-        messagebox.showwarning("Error", "Selecciona apartamento", parent=app)
+    if not selected_apartments:
+        messagebox.showwarning("Error", "Selecciona al menos un apartamento", parent=app)
         return
 
     establishment_data = ESTABLISHMENTS[establishment_name]
     apartments = establishment_data["apartments"]
 
-    password = apartments.get(ap, {}).get("code", "")
     wifi_name = establishment_data["wifi_name"]
     wifi_password = establishment_data["wifi_password"]
     language_code = "en" if language == "Inglés" else "es"
-    specific = establishment_data["apartment_notes"][language_code].get(ap, "")
+    selected_list = format_list(selected_apartments, language_code)
+    code_lines = format_code_lines(selected_apartments, apartments, language_code)
+    specific = format_apartment_notes(
+        selected_apartments,
+        establishment_data["apartment_notes"][language_code],
+    )
     sections = establishment_data["message_sections"][language_code]
 
     if language_code == "en":
+        apartment_label = "apartment" if len(selected_apartments) == 1 else "apartments"
+        verb = "is" if len(selected_apartments) == 1 else "are"
+        entrance_text = (
+            "This code also opens the main entrance using the black keypad."
+            if len(selected_apartments) == 1
+            else "These codes also open the main entrance using the black keypad."
+        )
+
         message = (
-            f"Hello {name}, your apartment at {establishment_name} is {ap}. "
-            f"You can enter with this code: {password}✅. The same code also opens the main "
-            "entrance using the black keypad. "
+            f"Hello {name}, your {apartment_label} at {establishment_name} {verb} {selected_list}.\n\n"
+            f"{code_lines}\n\n"
+            f"{entrance_text} "
             f"The Wi-Fi network is \"{wifi_name}\" and the password is \"{wifi_password}\".\n"
             f"{sections['welcome']}\n"
             f"{sections['cleaning']}{specific}\n"
             f"{sections['closing']}"
         )
     else:
+        apartment_label = "apartamento" if len(selected_apartments) == 1 else "apartamentos"
+        possessive = "tu" if len(selected_apartments) == 1 else "tus"
+        verb = "es" if len(selected_apartments) == 1 else "son"
+        entrance_text = (
+            "Este código también abre el portal utilizando el teclado negro."
+            if len(selected_apartments) == 1
+            else "Estos códigos también abren el portal utilizando el teclado negro."
+        )
+
         message = (
-            f"Hola {name} tu apartamento en {establishment_name} es el {ap}. "
-            f"Entras con este código: {password}✅, que también abre el portal utilizando el teclado negro. "
+            f"Hola {name}, {possessive} {apartment_label} en {establishment_name} {verb} {selected_list}.\n\n"
+            f"{code_lines}\n\n"
+            f"{entrance_text} "
             f"La wifi es \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
             f"{sections['welcome']}\n"
             f"{sections['cleaning']}{specific}\n"
@@ -236,9 +289,9 @@ establishment_menu = tk.OptionMenu(app, establishment_var, *ESTABLISHMENTS.keys(
 establishment_menu.pack(pady=6)
 
 tk.Label(app, text="Apartamento:").pack(pady=6)
-ap_var = tk.StringVar(value="Selecciona apartamento")
-apartment_menu = tk.OptionMenu(app, ap_var, "Selecciona apartamento")
-apartment_menu.pack(pady=6)
+apartment_vars = {}
+apartment_frame = tk.Frame(app)
+apartment_frame.pack(pady=6)
 
 tk.Label(app, text="Idioma del mensaje:").pack(pady=6)
 language_var = tk.StringVar(value="Español")

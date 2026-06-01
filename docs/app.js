@@ -30,9 +30,9 @@ const ESTABLISHMENTS = {
       "1A": { code: "9856" },
       "1B": { code: "6248" },
       "2A": { code: "6574" },
-      "2B": { code: "2584" },
-      "3A": { code: "2784" },
-      "3B": { code: "7447" },
+      "2B": { code: "8784" },
+      "3A": { code: "5321" },
+      "3B": { code: "9476" },
     },
     apartmentNotes: {
       es: {
@@ -88,7 +88,7 @@ const ESTABLISHMENTS = {
 const form = document.querySelector("#messageForm");
 const guestName = document.querySelector("#guestName");
 const establishment = document.querySelector("#establishment");
-const apartment = document.querySelector("#apartment");
+const apartmentOptions = document.querySelector("#apartmentOptions");
 const result = document.querySelector("#result");
 const statusMessage = document.querySelector("#status");
 const copyButton = document.querySelector("#copyButton");
@@ -107,9 +107,20 @@ function fillEstablishments() {
 
 function fillApartments() {
   const selected = ESTABLISHMENTS[establishment.value];
-  apartment.replaceChildren(
-    new Option("Selecciona apartamento", ""),
-    ...Object.keys(selected.apartments).map((name) => new Option(name, name)),
+  apartmentOptions.replaceChildren(
+    ...Object.keys(selected.apartments).map((name) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      const text = document.createElement("span");
+
+      input.type = "checkbox";
+      input.name = "apartments";
+      input.value = name;
+      text.textContent = name;
+      label.append(input, text);
+
+      return label;
+    }),
   );
 }
 
@@ -121,10 +132,44 @@ function selectedLanguage() {
   return new FormData(form).get("language");
 }
 
+function selectedApartments() {
+  return new FormData(form).getAll("apartments");
+}
+
+function formatList(items, language) {
+  if (items.length <= 1) {
+    return items[0] ?? "";
+  }
+
+  const conjunction = language === "en" ? "and" : "y";
+  return `${items.slice(0, -1).join(", ")} ${conjunction} ${items.at(-1)}`;
+}
+
+function formatCodeLines(apartments, establishmentData, language) {
+  return apartments
+    .map((apartmentName) => {
+      const code = establishmentData.apartments[apartmentName]?.code ?? "";
+
+      if (language === "en") {
+        return `You can enter apartment ${apartmentName} with this code: ${code}✅.`;
+      }
+
+      return `Puedes entrar al apartamento ${apartmentName} con este código: ${code}✅.`;
+    })
+    .join("\n");
+}
+
+function formatApartmentNotes(apartments, notes) {
+  return apartments
+    .map((apartmentName) => notes[apartmentName] ?? "")
+    .filter(Boolean)
+    .join("\n");
+}
+
 function generateMessage() {
   const name = guestName.value.trim();
   const establishmentName = establishment.value;
-  const apartmentName = apartment.value;
+  const apartmentNames = selectedApartments();
   const language = selectedLanguage();
 
   if (!name) {
@@ -133,31 +178,49 @@ function generateMessage() {
     return "";
   }
 
-  if (!apartmentName) {
-    setStatus("Selecciona apartamento.", true);
-    apartment.focus();
+  if (apartmentNames.length === 0) {
+    setStatus("Selecciona al menos un apartamento.", true);
+    apartmentOptions.querySelector("input")?.focus();
     return "";
   }
 
   const establishmentData = ESTABLISHMENTS[establishmentName];
-  const password = establishmentData.apartments[apartmentName]?.code ?? "";
-  const specific = establishmentData.apartmentNotes[language][apartmentName] ?? "";
+  const selectedList = formatList(apartmentNames, language);
+  const codeLines = formatCodeLines(apartmentNames, establishmentData, language);
+  const specific = formatApartmentNotes(apartmentNames, establishmentData.apartmentNotes[language]);
   const sections = establishmentData.messageSections[language];
 
   let message = "";
 
   if (language === "en") {
+    const apartmentLabel = apartmentNames.length === 1 ? "apartment" : "apartments";
+    const verb = apartmentNames.length === 1 ? "is" : "are";
+    const entranceText =
+      apartmentNames.length === 1
+        ? "This code also opens the main entrance using the black keypad."
+        : "These codes also open the main entrance using the black keypad.";
+
     message =
-      `Hello ${name}, your apartment at ${establishmentName} is ${apartmentName}. ` +
-      `You can enter with this code: ${password}✅. The same code also opens the main entrance using the black keypad. ` +
+      `Hello ${name}, your ${apartmentLabel} at ${establishmentName} ${verb} ${selectedList}.\n\n` +
+      `${codeLines}\n\n` +
+      `${entranceText} ` +
       `The Wi-Fi network is "${establishmentData.wifiName}" and the password is "${establishmentData.wifiPassword}".\n` +
       `${sections.welcome}\n` +
       `${sections.cleaning}${specific}\n` +
       sections.closing;
   } else {
+    const apartmentLabel = apartmentNames.length === 1 ? "apartamento" : "apartamentos";
+    const possessive = apartmentNames.length === 1 ? "tu" : "tus";
+    const verb = apartmentNames.length === 1 ? "es" : "son";
+    const entranceText =
+      apartmentNames.length === 1
+        ? "Este código también abre el portal utilizando el teclado negro."
+        : "Estos códigos también abren el portal utilizando el teclado negro.";
+
     message =
-      `Hola ${name} tu apartamento en ${establishmentName} es el ${apartmentName}. ` +
-      `Entras con este código: ${password}✅, que también abre el portal utilizando el teclado negro. ` +
+      `Hola ${name}, ${possessive} ${apartmentLabel} en ${establishmentName} ${verb} ${selectedList}.\n\n` +
+      `${codeLines}\n\n` +
+      `${entranceText} ` +
       `La wifi es "${establishmentData.wifiName}" y la contraseña es "${establishmentData.wifiPassword}".\n` +
       `${sections.welcome}\n` +
       `${sections.cleaning}${specific}\n` +

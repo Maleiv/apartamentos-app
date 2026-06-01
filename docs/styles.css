@@ -176,6 +176,40 @@ textarea:focus {
   background: var(--accent-soft);
 }
 
+.apartment-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+  gap: 8px;
+}
+
+.apartment-options label {
+  display: block;
+}
+
+.apartment-options input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.apartment-options span {
+  display: grid;
+  min-height: 48px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  color: var(--ink);
+  font-weight: 750;
+}
+
+.apartment-options input:checked + span {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(23, 107, 97, 0.12);
+}
+
 button {
   min-height: 48px;
   border: 0;
@@ -256,6 +290,10 @@ button {
   }
 
   .primary-button {
+    grid-column: 1 / -1;
+  }
+
+  .apartment-fieldset {
     grid-column: 1 / -1;
   }
 }
