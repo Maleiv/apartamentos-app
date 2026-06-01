@@ -219,7 +219,8 @@ button {
 }
 
 .primary-button,
-.secondary-button {
+.secondary-button,
+.whatsapp-button {
   padding: 0 16px;
 }
 
@@ -230,6 +231,7 @@ button {
 
 .primary-button:active,
 .secondary-button:active,
+.whatsapp-button:active,
 .icon-button:active {
   transform: translateY(1px);
 }
@@ -238,6 +240,12 @@ button {
   min-width: 92px;
   color: var(--accent-strong);
   background: var(--accent-soft);
+}
+
+.whatsapp-button {
+  min-width: 112px;
+  color: white;
+  background: #128c7e;
 }
 
 .icon-button {
@@ -267,6 +275,13 @@ button {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
+}
+
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .status {

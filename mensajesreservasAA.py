@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import webbrowser
+from urllib.parse import quote
 
 ESTABLISHMENTS = {
     "Apartamentos Puerto Basella": {
@@ -272,6 +273,19 @@ def copy_to_clipboard():
     messagebox.showinfo("Info", "Mensaje copiado al portapapeles!", parent=app)
 
 
+def open_whatsapp():
+    message = result_text.get("1.0", tk.END).strip()
+
+    if not message:
+        generate_message()
+        message = result_text.get("1.0", tk.END).strip()
+
+    if not message:
+        return
+
+    webbrowser.open(f"https://wa.me/?text={quote(message)}")
+
+
 def open_booking_messages():
     establishment_name = establishment_var.get()
     booking_messages_url = ESTABLISHMENTS[establishment_name]["booking_url"]
@@ -316,6 +330,7 @@ button_frame = tk.Frame(app)
 button_frame.pack(pady=10)
 
 tk.Button(button_frame, text="Copiar mensaje", command=copy_to_clipboard).pack(side="left", padx=5)
+tk.Button(button_frame, text="Abrir WhatsApp", command=open_whatsapp).pack(side="left", padx=5)
 tk.Button(button_frame, text="Abrir mensajes en Booking", command=open_booking_messages).pack(side="right", padx=5)
 
 establishment_var.trace_add("write", update_apartment_options)

@@ -74,7 +74,10 @@
       <section class="message-panel" aria-label="Mensaje generado">
         <div class="message-header">
           <h2>Mensaje generado</h2>
-          <button class="secondary-button" id="copyButton" type="button">Copiar</button>
+          <div class="message-actions">
+            <button class="whatsapp-button" id="whatsappButton" type="button">WhatsApp</button>
+            <button class="secondary-button" id="copyButton" type="button">Copiar</button>
+          </div>
         </div>
         <textarea id="result" rows="12" spellcheck="true" placeholder="El mensaje aparecerá aquí"></textarea>
         <p class="status" id="status" role="status" aria-live="polite"></p>

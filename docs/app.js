@@ -92,6 +92,7 @@ const apartmentOptions = document.querySelector("#apartmentOptions");
 const result = document.querySelector("#result");
 const statusMessage = document.querySelector("#status");
 const copyButton = document.querySelector("#copyButton");
+const whatsappButton = document.querySelector("#whatsappButton");
 const bookingButton = document.querySelector("#bookingButton");
 
 function setStatus(message, isError = false) {
@@ -265,6 +266,23 @@ copyButton.addEventListener("click", async () => {
     result.select();
     setStatus("Selecciona el texto y usa Copiar.", true);
   }
+});
+
+whatsappButton.addEventListener("click", () => {
+  let message = result.value.trim();
+
+  if (!message) {
+    message = generateMessage();
+
+    if (!message) {
+      return;
+    }
+
+    result.value = message;
+  }
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  setStatus("Abriendo WhatsApp.");
 });
 
 bookingButton.addEventListener("click", () => {
