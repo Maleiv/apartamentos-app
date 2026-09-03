@@ -93,17 +93,14 @@ ESTABLISHMENTS = {
         "booking_url": "https://admin.booking.com/",
         "message_sections": {
             "es": {
-                "welcome": (
-                    "En la mesa del salón tenéis una guía rápida con recomendaciones de playas, rutas y "
-                    "servicios de la zona."
-                ),
+                "welcome": "",
                 "cleaning": (
                     "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, "
                     "por si los necesitáis."
                 ),
                 "closing": (
-                    "Si necesitáis cualquier ayuda durante la estancia, escribidme y os ayudo enseguida. "
-                    "¡Disfrutad mucho de vuestras vacaciones!"
+                    "Si necesitáis cualquier cosa durante la estancia, escribidme y os ayudo enseguida. "
+                    "¡Disfrutad mucho de vuestro apartamento!"
                 ),
                 "cider": (
                     "Os hemos dejado una sidra natural artesanal que elaboramos en nuestra aldea de la "
@@ -112,17 +109,14 @@ ESTABLISHMENTS = {
                 ),
             },
             "en": {
-                "welcome": (
-                    "On the living room table, you will find a quick guide with recommendations for "
-                    "beaches, walking routes, and local services."
-                ),
+                "welcome": "",
                 "cleaning": (
                     "There are cleaning supplies in a cupboard outside the apartment, next to the lift, "
                     "in case you need them."
                 ),
                 "closing": (
-                    "If you need any help during your stay, just send me a message and I will help you "
-                    "right away. Enjoy your holiday!"
+                    "If you need anything during your stay, just send me a message and I will help you "
+                    "right away. Enjoy your apartment!"
                 ),
                 "cider": (
                     "We have left you a bottle of natural artisan cider, made in our village in the "
@@ -132,10 +126,10 @@ ESTABLISHMENTS = {
             },
         },
         "apartments": {
-            "1": {"code": "3279"},
-            "2": {"code": "5972"},
+            "1": {"code": "3279", "wifi_name": "Puerto Basella P1", "wifi_password": "a123b456"},
+            "2": {"code": "5972", "wifi_name": "PUERTO BASELLA", "wifi_password": "Lobeira14"},
             "3": {"code": "7021"},
-            "4": {"code": "5676"},
+            "4": {"code": "5676", "wifi_name": "TP-LINK_8D44", "wifi_password": "32288285"},
         },
         "apartment_notes": {"es": {}, "en": {}},
     },
@@ -192,6 +186,58 @@ def format_apartment_notes(selected_apartments, notes):
     return "\n".join(notes.get(ap, "") for ap in selected_apartments if notes.get(ap, ""))
 
 
+def wifi_for_apartment(establishment_data, ap):
+    apartment_data = establishment_data["apartments"].get(ap, {})
+
+    return {
+        "apartment_name": ap,
+        "name": apartment_data.get("wifi_name", establishment_data["wifi_name"]),
+        "password": apartment_data.get("wifi_password", establishment_data["wifi_password"]),
+    }
+
+
+def format_wifi_text(selected_apartments, establishment_data, language_code):
+    wifi_entries = [wifi_for_apartment(establishment_data, ap) for ap in selected_apartments]
+    unique_entries = []
+
+    for entry in wifi_entries:
+        if not any(
+            existing["name"] == entry["name"] and existing["password"] == entry["password"]
+            for existing in unique_entries
+        ):
+            unique_entries.append(entry)
+
+    if len(unique_entries) == 1:
+        name = unique_entries[0]["name"]
+        password = unique_entries[0]["password"]
+
+        if language_code == "en":
+            return f'The Wi-Fi network is "{name}" and the password is "{password}".'
+
+        return f'La wifi es "{name}" y la contraseña es "{password}".'
+
+    if language_code == "en":
+        lines = ["The Wi-Fi details are:"]
+        lines.extend(
+            f'Apartment {entry["apartment_name"]}: network "{entry["name"]}" '
+            f'and password "{entry["password"]}".'
+            for entry in wifi_entries
+        )
+        return "\n".join(lines)
+
+    lines = ["Los datos de la wifi son:"]
+    lines.extend(
+        f'Apartamento {entry["apartment_name"]}: red "{entry["name"]}" '
+        f'y contraseña "{entry["password"]}".'
+        for entry in wifi_entries
+    )
+    return "\n".join(lines)
+
+
+def join_message_parts(parts):
+    return "\n".join(part for part in parts if part.strip())
+
+
 def generate_message():
     name = name_entry.get().strip()
     establishment_name = establishment_var.get()
@@ -210,8 +256,6 @@ def generate_message():
     establishment_data = ESTABLISHMENTS[establishment_name]
     apartments = establishment_data["apartments"]
 
-    wifi_name = establishment_data["wifi_name"]
-    wifi_password = establishment_data["wifi_password"]
     language_code = "en" if language == "Inglés" else "es"
     selected_list = format_list(selected_apartments, language_code)
     code_lines = format_code_lines(selected_apartments, apartments, language_code)
@@ -219,6 +263,7 @@ def generate_message():
         selected_apartments,
         establishment_data["apartment_notes"][language_code],
     )
+    wifi_text = format_wifi_text(selected_apartments, establishment_data, language_code)
     sections = establishment_data["message_sections"][language_code]
 
     if language_code == "en":
@@ -230,15 +275,15 @@ def generate_message():
             else "These codes also open the main entrance using the black keypad."
         )
 
-        message = (
+        message = join_message_parts([
             f"Hello {name}, your {apartment_label} at {establishment_name} {verb} {selected_list}.\n\n"
             f"{code_lines}\n\n"
             f"{entrance_text} "
-            f"The Wi-Fi network is \"{wifi_name}\" and the password is \"{wifi_password}\".\n"
-            f"{sections['welcome']}\n"
-            f"{sections['cleaning']}{specific}\n"
-            f"{sections['closing']}"
-        )
+            f"{wifi_text}",
+            sections["welcome"],
+            f"{sections['cleaning']}{specific}",
+            sections["closing"],
+        ])
     else:
         apartment_label = "apartamento" if len(selected_apartments) == 1 else "apartamentos"
         possessive = "tu" if len(selected_apartments) == 1 else "tus"
@@ -249,15 +294,15 @@ def generate_message():
             else "Estos códigos también abren el portal utilizando el teclado negro."
         )
 
-        message = (
+        message = join_message_parts([
             f"Hola {name}, {possessive} {apartment_label} en {establishment_name} {verb} {selected_list}.\n\n"
             f"{code_lines}\n\n"
             f"{entrance_text} "
-            f"La wifi es \"{wifi_name}\" y la contraseña es \"{wifi_password}\".\n"
-            f"{sections['welcome']}\n"
-            f"{sections['cleaning']}{specific}\n"
-            f"{sections['closing']}"
-        )
+            f"{wifi_text}",
+            sections["welcome"],
+            f"{sections['cleaning']}{specific}",
+            sections["closing"],
+        ])
 
     if special == "SI":
         message += f"\n{sections['cider']}"

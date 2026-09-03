@@ -55,31 +55,29 @@ const ESTABLISHMENTS = {
     bookingUrl: "https://admin.booking.com/",
     messageSections: {
       es: {
-        welcome:
-          "En la mesa del salón tenéis una guía rápida con recomendaciones de playas, rutas y servicios de la zona.",
+        welcome: "",
         cleaning:
           "Hay artículos de limpieza en un armario fuera del apartamento, al lado del ascensor, por si los necesitáis.",
         closing:
-          "Si necesitáis cualquier ayuda durante la estancia, escribidme y os ayudo enseguida. ¡Disfrutad mucho de vuestras vacaciones!",
+          "Si necesitáis cualquier cosa durante la estancia, escribidme y os ayudo enseguida. ¡Disfrutad mucho de vuestro apartamento!",
         cider:
           "Os hemos dejado una sidra natural artesanal que elaboramos en nuestra aldea de la provincia de Lugo con nuestras propias manzanas. Tomadla fría, como si fuera un vino blanco, sin escanciar. Espero que os guste.",
       },
       en: {
-        welcome:
-          "On the living room table, you will find a quick guide with recommendations for beaches, walking routes, and local services.",
+        welcome: "",
         cleaning:
           "There are cleaning supplies in a cupboard outside the apartment, next to the lift, in case you need them.",
         closing:
-          "If you need any help during your stay, just send me a message and I will help you right away. Enjoy your holiday!",
+          "If you need anything during your stay, just send me a message and I will help you right away. Enjoy your apartment!",
         cider:
           "We have left you a bottle of natural artisan cider, made in our village in the province of Lugo with apples from our own trees. Please drink it chilled, like a white wine, without pouring it from a height. I hope you enjoy it.",
       },
     },
     apartments: {
-      "1": { code: "3279" },
-      "2": { code: "5972" },
+      "1": { code: "3279", wifiName: "Puerto Basella P1", wifiPassword: "a123b456" },
+      "2": { code: "5972", wifiName: "PUERTO BASELLA", wifiPassword: "Lobeira14" },
       "3": { code: "7021" },
-      "4": { code: "5676" },
+      "4": { code: "5676", wifiName: "TP-LINK_8D44", wifiPassword: "32288285" },
     },
     apartmentNotes: { es: {}, en: {} },
   },
@@ -167,6 +165,55 @@ function formatApartmentNotes(apartments, notes) {
     .join("\n");
 }
 
+function wifiForApartment(establishmentData, apartmentName) {
+  const apartmentData = establishmentData.apartments[apartmentName] ?? {};
+
+  return {
+    apartmentName,
+    name: apartmentData.wifiName ?? establishmentData.wifiName,
+    password: apartmentData.wifiPassword ?? establishmentData.wifiPassword,
+  };
+}
+
+function formatWifiText(apartments, establishmentData, language) {
+  const wifiEntries = apartments.map((apartmentName) => wifiForApartment(establishmentData, apartmentName));
+  const uniqueEntries = wifiEntries.filter((entry, index, entries) => {
+    return entries.findIndex((other) => other.name === entry.name && other.password === entry.password) === index;
+  });
+
+  if (uniqueEntries.length === 1) {
+    const { name, password } = uniqueEntries[0];
+
+    if (language === "en") {
+      return `The Wi-Fi network is "${name}" and the password is "${password}".`;
+    }
+
+    return `La wifi es "${name}" y la contraseña es "${password}".`;
+  }
+
+  if (language === "en") {
+    return [
+      "The Wi-Fi details are:",
+      ...wifiEntries.map(
+        ({ apartmentName, name, password }) =>
+          `Apartment ${apartmentName}: network "${name}" and password "${password}".`,
+      ),
+    ].join("\n");
+  }
+
+  return [
+    "Los datos de la wifi son:",
+    ...wifiEntries.map(
+      ({ apartmentName, name, password }) =>
+        `Apartamento ${apartmentName}: red "${name}" y contraseña "${password}".`,
+    ),
+  ].join("\n");
+}
+
+function joinMessageParts(parts) {
+  return parts.filter((part) => part.trim()).join("\n");
+}
+
 function generateMessage() {
   const name = guestName.value.trim();
   const establishmentName = establishment.value;
@@ -189,6 +236,7 @@ function generateMessage() {
   const selectedList = formatList(apartmentNames, language);
   const codeLines = formatCodeLines(apartmentNames, establishmentData, language);
   const specific = formatApartmentNotes(apartmentNames, establishmentData.apartmentNotes[language]);
+  const wifiText = formatWifiText(apartmentNames, establishmentData, language);
   const sections = establishmentData.messageSections[language];
 
   let message = "";
@@ -201,14 +249,15 @@ function generateMessage() {
         ? "This code also opens the main entrance using the black keypad."
         : "These codes also open the main entrance using the black keypad.";
 
-    message =
+    message = joinMessageParts([
       `Hello ${name}, your ${apartmentLabel} at ${establishmentName} ${verb} ${selectedList}.\n\n` +
       `${codeLines}\n\n` +
       `${entranceText} ` +
-      `The Wi-Fi network is "${establishmentData.wifiName}" and the password is "${establishmentData.wifiPassword}".\n` +
-      `${sections.welcome}\n` +
-      `${sections.cleaning}${specific}\n` +
-      sections.closing;
+      wifiText,
+      sections.welcome,
+      `${sections.cleaning}${specific}`,
+      sections.closing,
+    ]);
   } else {
     const apartmentLabel = apartmentNames.length === 1 ? "apartamento" : "apartamentos";
     const possessive = apartmentNames.length === 1 ? "tu" : "tus";
@@ -218,14 +267,15 @@ function generateMessage() {
         ? "Este código también abre el portal utilizando el teclado negro."
         : "Estos códigos también abren el portal utilizando el teclado negro.";
 
-    message =
+    message = joinMessageParts([
       `Hola ${name}, ${possessive} ${apartmentLabel} en ${establishmentName} ${verb} ${selectedList}.\n\n` +
       `${codeLines}\n\n` +
       `${entranceText} ` +
-      `La wifi es "${establishmentData.wifiName}" y la contraseña es "${establishmentData.wifiPassword}".\n` +
-      `${sections.welcome}\n` +
-      `${sections.cleaning}${specific}\n` +
-      sections.closing;
+      wifiText,
+      sections.welcome,
+      `${sections.cleaning}${specific}`,
+      sections.closing,
+    ]);
   }
 
   if (selectedCider() === "SI") {
