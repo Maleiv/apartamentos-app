@@ -314,7 +314,7 @@ language_menu = tk.OptionMenu(app, language_var, *language_options)
 language_menu.pack(pady=5)
 
 tk.Label(app, text="Sidra:").pack(pady=6)
-sp_var = tk.StringVar(value="NO")
+sp_var = tk.StringVar(value="SI")
 sp_options = ["SI", "NO"]
 sp_menu = tk.OptionMenu(app, sp_var, *sp_options)
 sp_menu.pack(pady=5)
