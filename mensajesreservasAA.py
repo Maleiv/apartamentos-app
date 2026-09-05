@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from html.parser import HTMLParser
+from pathlib import Path
 import webbrowser
 from urllib.parse import quote
 
@@ -426,25 +427,7 @@ def match_apartments(establishment_name, apartments_text):
     return [ap for ap in available_apartments if ap in imported_tokens]
 
 
-def import_misterplan_file():
-    path = filedialog.askopenfilename(
-        parent=app,
-        title="Importar archivo MisterPlan",
-        filetypes=[
-            ("Archivos MisterPlan", "*.xls *.html *.htm"),
-            ("Todos los archivos", "*.*"),
-        ],
-    )
-
-    if not path:
-        return
-
-    try:
-        rows = parse_misterplan_file(path)
-    except OSError as error:
-        messagebox.showerror("Error", f"No se pudo abrir el archivo:\n{error}", parent=app)
-        return
-
+def load_imported_rows(rows, source_name):
     imported_reservations.clear()
     import_tree.delete(*import_tree.get_children())
 
@@ -468,12 +451,62 @@ def import_misterplan_file():
             ),
         )
 
-    import_status_var.set(f"{len(rows)} reserva(s) importada(s).")
+    import_status_var.set(f"{len(rows)} reserva(s) importada(s) desde {source_name}.")
 
     if rows:
         first_item = import_tree.get_children()[0]
         import_tree.selection_set(first_item)
         import_tree.focus(first_item)
+
+
+def import_misterplan_path(path):
+    try:
+        rows = parse_misterplan_file(path)
+    except OSError as error:
+        messagebox.showerror("Error", f"No se pudo abrir el archivo:\n{error}", parent=app)
+        return
+
+    load_imported_rows(rows, Path(path).name)
+
+
+def latest_misterplan_file():
+    downloads_dir = Path.home() / "Downloads"
+    files = [path for path in downloads_dir.glob("Busqueda-*.xls") if path.is_file()]
+
+    if not files:
+        return None
+
+    return max(files, key=lambda path: path.stat().st_mtime)
+
+
+def import_misterplan_file():
+    path = filedialog.askopenfilename(
+        parent=app,
+        title="Importar archivo MisterPlan",
+        filetypes=[
+            ("Archivos MisterPlan", "*.xls *.html *.htm"),
+            ("Todos los archivos", "*.*"),
+        ],
+    )
+
+    if not path:
+        return
+
+    import_misterplan_path(path)
+
+
+def import_latest_misterplan_file():
+    path = latest_misterplan_file()
+
+    if not path:
+        messagebox.showwarning(
+            "Error",
+            "No encontré ningún archivo Busqueda-*.xls en la carpeta Descargas.",
+            parent=app,
+        )
+        return
+
+    import_misterplan_path(path)
 
 
 def load_selected_import():
@@ -567,9 +600,13 @@ import_toolbar = tk.Frame(import_tab)
 import_toolbar.pack(fill="x", padx=12, pady=12)
 
 tk.Button(import_toolbar, text="Importar archivo MisterPlan", command=import_misterplan_file).pack(side="left")
-tk.Button(import_toolbar, text="Cargar seleccionado en formulario", command=load_selected_import).pack(
+tk.Button(import_toolbar, text="Importar último archivo MisterPlan", command=import_latest_misterplan_file).pack(
     side="left",
     padx=8,
+)
+tk.Button(import_toolbar, text="Cargar seleccionado en formulario", command=load_selected_import).pack(
+    side="left",
+    padx=0,
 )
 
 import_status_var = tk.StringVar(value="Importa el archivo .xls de entradas de MisterPlan.")
