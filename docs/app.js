@@ -31,11 +31,11 @@ const ESTABLISHMENTS = {
       },
     },
     apartments: {
-      "1A": { code: "9856" },
+      "1A": { code: "9856", omitCleaning: true },
       "1B": { code: "4129", washingInstructions: true },
-      "2A": { code: "3282" },
+      "2A": { code: "3282", omitCleaning: true },
       "2B": { code: "4972", washingInstructions: true },
-      "3A": { code: "5321" },
+      "3A": { code: "5321", omitCleaning: true },
       "3B": { code: "9476", washingInstructions: true },
     },
     apartmentNotes: {
@@ -242,6 +242,9 @@ function generateMessage() {
   const specific = formatApartmentNotes(apartmentNames, establishmentData.apartmentNotes[language]);
   const wifiText = formatWifiText(apartmentNames, establishmentData, language);
   const sections = establishmentData.messageSections[language];
+  const cleaningText = apartmentNames.some((name) => !establishmentData.apartments[name].omitCleaning)
+    ? sections.cleaning
+    : "";
   const washingApartments = apartmentNames.filter((name) => establishmentData.apartments[name].washingInstructions);
   let washingText = washingApartments.length ? sections.washing : "";
   if (washingText && apartmentNames.length > 1) {
@@ -267,7 +270,7 @@ function generateMessage() {
       `${entranceText} ` +
       wifiText,
       sections.welcome,
-      `${sections.cleaning}${specific}`,
+      `${cleaningText}${specific}`,
       washingText,
       sections.closing,
     ]);
@@ -286,7 +289,7 @@ function generateMessage() {
       `${entranceText} ` +
       wifiText,
       sections.welcome,
-      `${sections.cleaning}${specific}`,
+      `${cleaningText}${specific}`,
       washingText,
       sections.closing,
     ]);

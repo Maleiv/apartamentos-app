@@ -59,11 +59,11 @@ ESTABLISHMENTS = {
             },
         },
         "apartments": {
-            "1A": {"code": "9856"},
+            "1A": {"code": "9856", "omit_cleaning": True},
             "1B": {"code": "4129", "washing_instructions": True},
-            "2A": {"code": "3282"},
+            "2A": {"code": "3282", "omit_cleaning": True},
             "2B": {"code": "4972", "washing_instructions": True},
-            "3A": {"code": "5321"},
+            "3A": {"code": "5321", "omit_cleaning": True},
             "3B": {"code": "9476", "washing_instructions": True},
         },
         "apartment_notes": {
@@ -327,6 +327,9 @@ def generate_message():
     )
     wifi_text = format_wifi_text(selected_apartments, establishment_data, language_code)
     sections = establishment_data["message_sections"][language_code]
+    cleaning_text = sections["cleaning"] if any(
+        not apartments[ap].get("omit_cleaning", False) for ap in selected_apartments
+    ) else ""
     washing_apartments = [ap for ap in selected_apartments if apartments[ap].get("washing_instructions")]
     washing_text = sections["washing"] if washing_apartments else ""
     if washing_text and len(selected_apartments) > 1:
@@ -350,7 +353,7 @@ def generate_message():
             f"{entrance_text} "
             f"{wifi_text}",
             sections["welcome"],
-            f"{sections['cleaning']}{specific}",
+            f"{cleaning_text}{specific}",
             washing_text,
             sections["closing"],
         ])
@@ -370,7 +373,7 @@ def generate_message():
             f"{entrance_text} "
             f"{wifi_text}",
             sections["welcome"],
-            f"{sections['cleaning']}{specific}",
+            f"{cleaning_text}{specific}",
             washing_text,
             sections["closing"],
         ])
