@@ -28,9 +28,9 @@ const ESTABLISHMENTS = {
     },
     apartments: {
       "1A": { code: "9856" },
-      "1B": { code: "6248" },
-      "2A": { code: "6574" },
-      "2B": { code: "8784" },
+      "1B": { code: "4129" },
+      "2A": { code: "3282" },
+      "2B": { code: "4972" },
       "3A": { code: "5321" },
       "3B": { code: "9476" },
     },
