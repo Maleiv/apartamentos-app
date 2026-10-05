@@ -12,6 +12,10 @@ ESTABLISHMENTS = {
         "booking_url": "https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/search_reservations.html?upcoming_reservations=1&source=nav&hotel_id=260913&lang=es",
         "message_sections": {
             "es": {
+                "washing": (
+                    "Para utilizar la lavadora, seleccione el programa “K” para lavar.\n"
+                    "Al finalizar el lavado, cambie al programa “L” para eliminar el exceso de agua."
+                ),
                 "welcome": (
                     "En el salón hay una carpeta de color marrón que contiene información, sugerencias y "
                     "recomendaciones de restaurantes y servicios en la zona."
@@ -31,6 +35,10 @@ ESTABLISHMENTS = {
                 ),
             },
             "en": {
+                "washing": (
+                    "To use the washing machine, simply select the “K” program to wash.\n"
+                    "When the wash cycle ends, switch to program “L” to remove the excess water."
+                ),
                 "welcome": (
                     "In the living room, there is a brown folder with useful information, suggestions, "
                     "and recommendations for restaurants and services in the area."
@@ -52,11 +60,11 @@ ESTABLISHMENTS = {
         },
         "apartments": {
             "1A": {"code": "9856"},
-            "1B": {"code": "4129"},
+            "1B": {"code": "4129", "washing_instructions": True},
             "2A": {"code": "3282"},
-            "2B": {"code": "4972"},
+            "2B": {"code": "4972", "washing_instructions": True},
             "3A": {"code": "5321"},
-            "3B": {"code": "9476"},
+            "3B": {"code": "9476", "washing_instructions": True},
         },
         "apartment_notes": {
             "es": {
@@ -319,6 +327,13 @@ def generate_message():
     )
     wifi_text = format_wifi_text(selected_apartments, establishment_data, language_code)
     sections = establishment_data["message_sections"][language_code]
+    washing_apartments = [ap for ap in selected_apartments if apartments[ap].get("washing_instructions")]
+    washing_text = sections["washing"] if washing_apartments else ""
+    if washing_text and len(selected_apartments) > 1:
+        label = "Apartment" if language_code == "en" else "Apartamento"
+        if len(washing_apartments) > 1:
+            label = "Apartments" if language_code == "en" else "Apartamentos"
+        washing_text = f"{label} {format_list(washing_apartments, language_code)}:\n{washing_text}"
 
     if language_code == "en":
         apartment_label = "apartment" if len(selected_apartments) == 1 else "apartments"
@@ -336,6 +351,7 @@ def generate_message():
             f"{wifi_text}",
             sections["welcome"],
             f"{sections['cleaning']}{specific}",
+            washing_text,
             sections["closing"],
         ])
     else:
@@ -355,6 +371,7 @@ def generate_message():
             f"{wifi_text}",
             sections["welcome"],
             f"{sections['cleaning']}{specific}",
+            washing_text,
             sections["closing"],
         ])
 

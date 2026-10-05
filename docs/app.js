@@ -6,6 +6,8 @@ const ESTABLISHMENTS = {
       "https://admin.booking.com/hotel/hoteladmin/extranet_ng/manage/search_reservations.html?upcoming_reservations=1&source=nav&hotel_id=260913&lang=es",
     messageSections: {
       es: {
+        washing:
+          "Para utilizar la lavadora, seleccione el programa “K” para lavar.\nAl finalizar el lavado, cambie al programa “L” para eliminar el exceso de agua.",
         welcome:
           "En el salón hay una carpeta de color marrón que contiene información, sugerencias y recomendaciones de restaurantes y servicios en la zona.",
         cleaning:
@@ -16,6 +18,8 @@ const ESTABLISHMENTS = {
           "Os hemos dejado una sidra natural artesanal que elaboramos en nuestra aldea de la provincia de Lugo con nuestras propias manzanas. Tomadla fría, como si fuera un vino blanco, sin escanciar. Espero que os guste.",
       },
       en: {
+        washing:
+          "To use the washing machine, simply select the “K” program to wash.\nWhen the wash cycle ends, switch to program “L” to remove the excess water.",
         welcome:
           "In the living room, there is a brown folder with useful information, suggestions, and recommendations for restaurants and services in the area.",
         cleaning:
@@ -28,11 +32,11 @@ const ESTABLISHMENTS = {
     },
     apartments: {
       "1A": { code: "9856" },
-      "1B": { code: "4129" },
+      "1B": { code: "4129", washingInstructions: true },
       "2A": { code: "3282" },
-      "2B": { code: "4972" },
+      "2B": { code: "4972", washingInstructions: true },
       "3A": { code: "5321" },
-      "3B": { code: "9476" },
+      "3B": { code: "9476", washingInstructions: true },
     },
     apartmentNotes: {
       es: {
@@ -238,6 +242,14 @@ function generateMessage() {
   const specific = formatApartmentNotes(apartmentNames, establishmentData.apartmentNotes[language]);
   const wifiText = formatWifiText(apartmentNames, establishmentData, language);
   const sections = establishmentData.messageSections[language];
+  const washingApartments = apartmentNames.filter((name) => establishmentData.apartments[name].washingInstructions);
+  let washingText = washingApartments.length ? sections.washing : "";
+  if (washingText && apartmentNames.length > 1) {
+    const label = language === "en"
+      ? (washingApartments.length === 1 ? "Apartment" : "Apartments")
+      : (washingApartments.length === 1 ? "Apartamento" : "Apartamentos");
+    washingText = `${label} ${formatList(washingApartments, language)}:\n${washingText}`;
+  }
 
   let message = "";
 
@@ -256,6 +268,7 @@ function generateMessage() {
       wifiText,
       sections.welcome,
       `${sections.cleaning}${specific}`,
+      washingText,
       sections.closing,
     ]);
   } else {
@@ -274,6 +287,7 @@ function generateMessage() {
       wifiText,
       sections.welcome,
       `${sections.cleaning}${specific}`,
+      washingText,
       sections.closing,
     ]);
   }
