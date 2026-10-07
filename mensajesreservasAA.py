@@ -138,9 +138,9 @@ ESTABLISHMENTS = {
         },
         "apartments": {
             "1": {"code": "3279", "wifi_name": "Puerto Basella P1", "wifi_password": "a123b456"},
-            "2": {"code": "5972", "wifi_name": "PUERTO BASELLA", "wifi_password": "Lobeira14"},
+            "2": {"code": "8783", "wifi_name": "PUERTO BASELLA", "wifi_password": "Lobeira14"},
             "3": {"code": "7021"},
-            "4": {"code": "5676", "wifi_name": "TP-LINK_8D44", "wifi_password": "32288285"},
+            "4": {"code": "1296", "wifi_name": "TP-LINK_8D44", "wifi_password": "32288285"},
         },
         "apartment_notes": {"es": {}, "en": {}},
     },

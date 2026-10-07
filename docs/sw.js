@@ -1,4 +1,4 @@
-const CACHE_NAME = "mensajes-aa-v9";
+const CACHE_NAME = "mensajes-aa-v10";
 const ASSETS = [
   "./",
   "index.html",

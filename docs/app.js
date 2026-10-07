@@ -79,9 +79,9 @@ const ESTABLISHMENTS = {
     },
     apartments: {
       "1": { code: "3279", wifiName: "Puerto Basella P1", wifiPassword: "a123b456" },
-      "2": { code: "5972", wifiName: "PUERTO BASELLA", wifiPassword: "Lobeira14" },
+      "2": { code: "8783", wifiName: "PUERTO BASELLA", wifiPassword: "Lobeira14" },
       "3": { code: "7021" },
-      "4": { code: "5676", wifiName: "TP-LINK_8D44", wifiPassword: "32288285" },
+      "4": { code: "1296", wifiName: "TP-LINK_8D44", wifiPassword: "32288285" },
     },
     apartmentNotes: { es: {}, en: {} },
   },
