@@ -98,6 +98,7 @@ ESTABLISHMENTS = {
         },
     },
     "Apartamentos Autor": {
+        "import_names": ("4 APARTAMENTOS DE AUTOR", "APARTAMENTOS DE AUTOR"),
         "wifi_name": "puertobasella",
         "wifi_password": "a123b456",
         "booking_url": "https://admin.booking.com/",
@@ -431,8 +432,9 @@ def parse_misterplan_file(path):
 def match_establishment(name):
     normalized = " ".join(name.split()).lower()
 
-    for establishment_name in ESTABLISHMENTS:
-        if establishment_name.lower() == normalized:
+    for establishment_name, establishment_data in ESTABLISHMENTS.items():
+        names = (establishment_name, *establishment_data.get("import_names", ()))
+        if any(" ".join(candidate.split()).lower() == normalized for candidate in names):
             return establishment_name
 
     return None
